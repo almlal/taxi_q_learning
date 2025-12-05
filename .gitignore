@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Sanal Ortam (Virtual Environment)
+venv/
+env/
+.env
+
+# Mac OS
+.DS_Store
+
+# IDE Ayarları (VS Code, PyCharm vb.)
+.idea/
+.vscode/
+
+# Oluşturulan GIF'leri yüklemek isteyebilirsiniz ama istemezseniz buraya *.gif yazabilirsiniz.
+# Şimdilik GIF'leri yükleyelim ki README'de gösterelim.
