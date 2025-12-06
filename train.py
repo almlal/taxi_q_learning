@@ -1,17 +1,13 @@
-# Dosya Adı: train.py
-
 import numpy as np
 import random
 import imageio
-from taxi_env import TaxiEnv6x6  # Ortamımızı buradan çağırıyoruz
+from taxi_env import TaxiEnv6x6
 
 def train_agent():
     env = TaxiEnv6x6()
     
-    # Q-Table Başlatma
     q_table = np.zeros([1080, env.action_space_n])
 
-    # Hiperparametreler
     alpha = 0.1
     gamma = 0.6
     epsilon = 0.1
@@ -57,10 +53,8 @@ def create_animation(q_table, env, output_file='taxi_simulation.gif'):
             state, reward, done = env.step(action)
             steps += 1
         
-        # Bölüm sonu karesini ekle
         frames.append(env.render_frame(episode_num=ep))
         
-        # Geçiş duraksaması
         last_frame = env.render_frame(episode_num=ep)
         for _ in range(4):
             frames.append(last_frame)
@@ -69,7 +63,5 @@ def create_animation(q_table, env, output_file='taxi_simulation.gif'):
     print(f"Animasyon '{output_file}' olarak kaydedildi.")
 
 if __name__ == "__main__":
-    # Önce eğit
     q_table, env = train_agent()
-    # Sonra GIF yap
     create_animation(q_table, env, output_file='taxi_final.gif')

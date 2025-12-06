@@ -1,10 +1,7 @@
-# Dosya Adı: taxi_env.py
-
 import numpy as np
 import random
 import matplotlib
-# MacOS ve görüntü oluşturma hatalarını önlemek için 'Agg' backend
-matplotlib.use('Agg') 
+matplotlib.use('Agg') #macos görüntü oluşturma hatasını gidermek için.
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
@@ -12,10 +9,8 @@ class TaxiEnv6x6:
     def __init__(self):
         self.rows = 6
         self.cols = 6
-        # Lokasyonlar: (Satır, Sütun)
         self.locs = [(0, 0), (0, 5), (4, 0), (5, 4), (2, 3)]
         self.action_space_n = 6
-        # Duvarlar
         self.walls_hor = [(0, 1), (2, 3), (4, 4)]
         self.walls_ver = [(1, 1), (3, 2), (4, 3)]
         self.reset()
@@ -56,25 +51,23 @@ class TaxiEnv6x6:
         done = False
         new_row, new_col = self.taxi_row, self.taxi_col
         
-        # Hareketler: 0:South, 1:North, 2:East, 3:West
-        if action == 0: # SOUTH
+        if action == 0:
             if new_row < self.rows - 1 and (new_row, new_col) not in self.walls_hor:
                 new_row += 1
-        elif action == 1: # NORTH
+        elif action == 1:
             if new_row > 0 and (new_row - 1, new_col) not in self.walls_hor:
                 new_row -= 1
-        elif action == 2: # EAST
+        elif action == 2:
             if new_col < self.cols - 1 and (new_row, new_col) not in self.walls_ver:
                 new_col += 1
-        elif action == 3: # WEST
+        elif action == 3:
             if new_col > 0 and (new_row, new_col - 1) not in self.walls_ver:
                 new_col -= 1
         
         self.taxi_row = new_row
         self.taxi_col = new_col
 
-        # Pickup (4) / Dropoff (5)
-        if action == 4: # PICKUP
+        if action == 4:
             if self.pass_loc == 5:
                 reward = -10
             elif (self.taxi_row, self.taxi_col) == self.locs[self.pass_loc]:
@@ -82,7 +75,7 @@ class TaxiEnv6x6:
                 reward = 10
             else:
                 reward = -10
-        elif action == 5: # DROPOFF
+        elif action == 5:
             if self.pass_loc == 5 and (self.taxi_row, self.taxi_col) == self.locs[self.dest_idx]:
                 reward = 20
                 done = True
@@ -96,8 +89,7 @@ class TaxiEnv6x6:
 
     def render_frame(self, episode_num=1):
         fig, ax = plt.subplots(figsize=(6, 6))
-        
-        # Grid ayarları
+
         ax.set_xlim(0, 6)
         ax.set_ylim(0, 6)
         ax.set_xticks(np.arange(0, 7, 1))
@@ -107,22 +99,18 @@ class TaxiEnv6x6:
         ax.grid(True, color='black', linewidth=1)
         ax.invert_yaxis()
         
-        # Hedef (Mor)
         dest_r, dest_c = self.locs[self.dest_idx]
         rect_dest = patches.Rectangle((dest_c, dest_r), 1, 1, facecolor='purple', alpha=0.5)
         ax.add_patch(rect_dest)
         
-        # Yolcu (Mavi)
         if self.pass_loc != 5:
             pass_r, pass_c = self.locs[self.pass_loc]
             rect_pass = patches.Rectangle((pass_c, pass_r), 1, 1, facecolor='blue')
             ax.add_patch(rect_pass)
             ax.text(pass_c + 0.5, pass_r + 0.5, "Yolcu", ha='center', va='center', color='white', fontsize=10, fontweight='bold')
 
-        # Hedef Yazısı
         ax.text(dest_c + 0.5, dest_r + 0.5, "HEDEF", ha='center', va='center', color='white', fontsize=9, fontweight='bold')
 
-        # Taksi (Sarı/Yeşil)
         taxi_color = 'yellow' 
         taxi_text = "Taksi"
         if self.pass_loc == 5:
@@ -133,7 +121,6 @@ class TaxiEnv6x6:
         ax.add_patch(rect_taxi)
         ax.text(self.taxi_col + 0.5, self.taxi_row + 0.5, taxi_text, ha='center', va='center', color='black', fontsize=10, fontweight='bold')
 
-        # Duvarlar
         for (r, c) in self.walls_hor:
             ax.plot([c, c+1], [r+1, r+1], color='black', linewidth=5)
         for (r, c) in self.walls_ver:
